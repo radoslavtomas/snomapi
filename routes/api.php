@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::put('users/{user}', [UserController::class, 'update']);
 //Route::delete('users/{user}', [UserController::class, 'destroy']);
 
-Route::apiResource('users', UserController::class);
+Route::post('auth/register', RegisterController::class);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('users', UserController::class);
+});
