@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -22,7 +23,7 @@ class AuthTest extends TestCase
 
         $response = $this->postJson('/api/auth/register', $user);
 
-        $response->assertStatus(422)->assertJsonStructure([
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure([
             'errors' => [
                 'email'
             ],
@@ -42,7 +43,7 @@ class AuthTest extends TestCase
             'password' => 'password',
         ]);
 
-        $response->assertStatus(422)->assertJsonStructure([
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure([
             'errors' => [
                 'password'
             ],
@@ -62,7 +63,7 @@ class AuthTest extends TestCase
             'password' => 'Password123',
         ]);
 
-        $response->assertStatus(201)->assertJsonStructure([
+        $response->assertStatus(Response::HTTP_CREATED)->assertJsonStructure([
             'data' => [
                 'id',
                 'name',
@@ -80,7 +81,7 @@ class AuthTest extends TestCase
     {
         $response = $this->getJson('/api/user');
 
-        $response->assertStatus(401);
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -94,6 +95,6 @@ class AuthTest extends TestCase
 
         $response = $this->actingAs($user)->getJson('/api/user');
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 }
