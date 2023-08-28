@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -15,16 +16,19 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
+    private int $paginationPerPage = 15;
+
     /**
      * Get all users
      *
      * @return AnonymousResourceCollection
+     * @throws AuthorizationException
      */
     public function index(): AnonymousResourceCollection
     {
         $this->authorize('manage-users');
 
-        return UserResource::collection(User::with('contacts')->paginate(15));
+        return UserResource::collection(User::with('contacts')->paginate($this->paginationPerPage));
     }
 
     /**
@@ -32,6 +36,7 @@ class UserController extends Controller
      *
      * @param User $user
      * @return UserResource
+     * @throws AuthorizationException
      */
     public function show(User $user): UserResource
     {
@@ -45,6 +50,7 @@ class UserController extends Controller
      *
      * @param StoreUserRequest $request
      * @return UserResource
+     * @throws AuthorizationException
      */
     public function store(StoreUserRequest $request): UserResource
     {
@@ -67,6 +73,7 @@ class UserController extends Controller
      * @param User $user
      * @param UpdateUserRequest $request
      * @return UserResource
+     * @throws AuthorizationException
      */
     public function update(User $user, UpdateUserRequest $request): UserResource
     {
@@ -82,6 +89,7 @@ class UserController extends Controller
      *
      * @param User $user
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function destroy(User $user): \Illuminate\Http\Response
     {

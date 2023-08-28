@@ -33,7 +33,7 @@ Route::post('auth/register', RegisterController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('contacts', ContactsController::class);
-    
+
     Route::prefix('contacts/{contact}')->group(function () {
         Route::apiResource('addresses', AddressesController::class);
     });
