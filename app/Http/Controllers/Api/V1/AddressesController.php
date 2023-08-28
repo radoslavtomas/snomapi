@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAddressRequest;
@@ -8,7 +8,6 @@ use App\Http\Resources\AddressResource;
 use App\Models\Address;
 use App\Models\Contact;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AddressesController extends Controller

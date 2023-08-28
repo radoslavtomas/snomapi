@@ -12,6 +12,8 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
+    private string $apiVersion = 'v1';
+
     /**
      * Test registration fails if email has been taken
      *
@@ -21,7 +23,7 @@ class AuthTest extends TestCase
     {
         $user = User::factory()->create()->toArray();
 
-        $response = $this->postJson('/api/auth/register', $user);
+        $response = $this->postJson('/api/' . $this->apiVersion . '/auth/register', $user);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure([
             'errors' => [
@@ -37,7 +39,7 @@ class AuthTest extends TestCase
      */
     public function test_registration_fails_with_insecure_password(): void
     {
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->postJson('/api/' . $this->apiVersion . '/auth/register', [
             'name' => 'Valid name',
             'email' => 'valid@email.com',
             'password' => 'password',
@@ -57,7 +59,7 @@ class AuthTest extends TestCase
      */
     public function test_registration_succeeds_with_valid_data(): void
     {
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->postJson('/api/' . $this->apiVersion . '/auth/register', [
             'name' => 'Valid name',
             'email' => 'valid@email.com',
             'password' => 'Password123',
@@ -79,7 +81,7 @@ class AuthTest extends TestCase
      */
     public function test_protected_route_cannot_be_accessed_without_authentication(): void
     {
-        $response = $this->getJson('/api/user');
+        $response = $this->getJson('/api/' . $this->apiVersion . '/user');
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
@@ -93,7 +95,7 @@ class AuthTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->getJson('/api/user');
+        $response = $this->actingAs($user)->getJson('/api/' . $this->apiVersion . '/user');
 
         $response->assertStatus(Response::HTTP_OK);
     }

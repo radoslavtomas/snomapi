@@ -14,12 +14,14 @@ class AddressTest extends TestCase
 {
     use RefreshDatabase;
 
+    private string $apiVersion = 'v1';
+
     /**
      * Unauthenticated user cannot view addresses
      */
     public function test_unauthenticated_user_cannot_view_addresses(): void
     {
-        $response = $this->getJson('/api/contacts/1/addresses');
+        $response = $this->getJson('/api/' . $this->apiVersion . '/contacts/1/addresses');
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
@@ -34,7 +36,7 @@ class AddressTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->actingAs($user)->postJson('/api/contacts/' . $contact->id . '/addresses' , [
+        $response = $this->actingAs($user)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses' , [
             'address_line_1' => fake()->streetAddress(),
             'address_line_4' => fake()->city(),
             'postcode' => fake()->postcode(),
@@ -60,11 +62,11 @@ class AddressTest extends TestCase
             'contact_id' => $contact->id
         ]);
 
-        $response = $this->actingAs($user2)->getJson('/api/contacts/' . $contact->id . '/addresses');
+        $response = $this->actingAs($user2)->getJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses');
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
 
-        $response = $this->actingAs($user2)->getJson('/api/contacts/' . $contact->id . '/addresses/' . $address->id);
+        $response = $this->actingAs($user2)->getJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses/' . $address->id);
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
@@ -85,7 +87,7 @@ class AddressTest extends TestCase
             'contact_id' => $contact->id
         ]);
 
-        $response = $this->actingAs($user2)->postJson('/api/contacts/' . $contact->id . '/addresses/' . $address->id, [
+        $response = $this->actingAs($user2)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses/' . $address->id, [
             '_method' => 'PUT',
             'address_line_1' => 'Changed street 123',
             'address_line_4' => 'Invisible city',
@@ -111,7 +113,7 @@ class AddressTest extends TestCase
             'contact_id' => $contact->id
         ]);
 
-        $response = $this->actingAs($user)->postJson('/api/contacts/' . $contact->id . '/addresses/' . $address->id, [
+        $response = $this->actingAs($user)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses/' . $address->id, [
             '_method' => 'PUT',
             'address_line_1' => 'Changed street 123',
             'address_line_4' => 'Invisible city',
@@ -138,7 +140,7 @@ class AddressTest extends TestCase
             'contact_id' => $contact->id
         ]);
 
-        $response = $this->actingAs($user2)->postJson('/api/contacts/' . $contact->id . '/addresses/' . $address->id, [
+        $response = $this->actingAs($user2)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses/' . $address->id, [
             '_method' => 'DELETE',
         ]);
 
@@ -160,7 +162,7 @@ class AddressTest extends TestCase
             'contact_id' => $contact->id
         ]);
 
-        $response = $this->actingAs($user)->postJson('/api/contacts/' . $contact->id . '/addresses/' . $address->id, [
+        $response = $this->actingAs($user)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses/' . $address->id, [
             '_method' => 'DELETE',
         ]);
 

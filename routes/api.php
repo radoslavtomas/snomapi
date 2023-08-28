@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\ContactsController;
-use App\Http\Controllers\Api\UserController;
-use \App\Http\Controllers\Api\AddressesController;
+use App\Http\Controllers\Api\V1\AddressesController;
+use App\Http\Controllers\Api\V1\ContactsController;
+use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------

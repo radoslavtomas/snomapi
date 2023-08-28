@@ -13,12 +13,14 @@ class ContactTest extends TestCase
 {
     use RefreshDatabase;
 
+    private string $apiVersion = 'v1';
+
     /**
      * Unauthenticated user cannot create a contact
      */
     public function test_unauthenticated_user_cannot_crete_contact(): void
     {
-        $response = $this->postJson('/api/contacts', [
+        $response = $this->postJson('/api/' . $this->apiVersion . '/contacts', [
             'first_names' => 'Test',
             'last_name' => 'Test',
             'date_of_birth' => '05/05/1972',
@@ -36,7 +38,7 @@ class ContactTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->postJson('/api/contacts', [
+        $response = $this->actingAs($user)->postJson('/api/' . $this->apiVersion . '/contacts', [
             'first_names' => 'Test',
             'last_name' => 'Test',
             'date_of_birth' => '05/05/1972',
@@ -57,7 +59,7 @@ class ContactTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->actingAs($user)->getJson('/api/contacts/' . $contact->id);
+        $response = $this->actingAs($user)->getJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id);
 
         $response->assertStatus(Response::HTTP_OK);
     }
@@ -74,7 +76,7 @@ class ContactTest extends TestCase
             'user_id' => $user1->id
         ]);
 
-        $response = $this->actingAs($user2)->getJson('/api/contacts/' . $contact->id);
+        $response = $this->actingAs($user2)->getJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id);
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
@@ -91,7 +93,7 @@ class ContactTest extends TestCase
             'user_id' => $user1->id
         ]);
 
-        $response = $this->actingAs($user2)->postJson('/api/contacts/' . $contact->id, [
+        $response = $this->actingAs($user2)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id, [
             '_method' => 'PUT',
             'first_names' => 'Test Changed',
             'last_name' => 'Test Changed',
@@ -115,7 +117,7 @@ class ContactTest extends TestCase
             'user_id' => $user1->id
         ]);
 
-        $response = $this->actingAs($user2)->postJson('/api/contacts/' . $contact->id, [
+        $response = $this->actingAs($user2)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id, [
             '_method' => 'DELETE'
         ]);
 
