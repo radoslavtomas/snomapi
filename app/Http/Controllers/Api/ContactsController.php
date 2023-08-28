@@ -7,6 +7,7 @@ use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -31,12 +32,11 @@ class ContactsController extends Controller
      *
      * @param Contact $contact
      * @return ContactResource
+     * @throws AuthorizationException
      */
     public function show(Contact $contact): ContactResource
     {
-        if (auth()->user()->cannot('view', $contact)) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('view', $contact);
 
         return new ContactResource($contact);
     }
@@ -60,12 +60,11 @@ class ContactsController extends Controller
      * @param Contact $contact
      * @param StoreContactRequest $request
      * @return ContactResource
+     * @throws AuthorizationException
      */
     public function update(Contact $contact, StoreContactRequest $request): ContactResource
     {
-        if (auth()->user()->cannot('update', $contact)) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('update', $contact);
 
         $contact->update($request->all());
 
@@ -77,12 +76,11 @@ class ContactsController extends Controller
      *
      * @param Contact $contact
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function destroy(Contact $contact): \Illuminate\Http\Response
     {
-        if (auth()->user()->cannot('delete', $contact)) {
-            abort(Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('delete', $contact);
 
         $contact->delete();
 

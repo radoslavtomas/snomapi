@@ -22,6 +22,8 @@ class UserController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
+        $this->authorize('manage-users');
+
         return UserResource::collection(User::with('contacts')->paginate(15));
     }
 
@@ -33,6 +35,8 @@ class UserController extends Controller
      */
     public function show(User $user): UserResource
     {
+        $this->authorize('manage-users');
+
         return new UserResource($user);
     }
 
@@ -44,6 +48,8 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): UserResource
     {
+        $this->authorize('manage-users');
+
         $user = User::create([ // TODO: refactor according to real needs
             'name' => $request->get('name'),
             'email' => $request->get('email'),
@@ -64,6 +70,8 @@ class UserController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request): UserResource
     {
+        $this->authorize('manage-users');
+
         $user->update($request->all());
 
         return new UserResource($user);
@@ -77,6 +85,8 @@ class UserController extends Controller
      */
     public function destroy(User $user): \Illuminate\Http\Response
     {
+        $this->authorize('manage-users');
+
         $user->delete();
 
         return response(null, Response::HTTP_NO_CONTENT);

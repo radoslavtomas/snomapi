@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contact_id');
+            $table->foreignId('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->string('address_line_1');
             $table->string('address_line_2')->nullable();
             $table->string('address_line_3')->nullable();

@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Address;
 use App\Models\Contact;
+use App\Models\User;
+use App\Policies\AddressPolicy;
 use App\Policies\ContactPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -15,7 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Contact::class => ContactPolicy::class
+        Address::class => AddressPolicy::class,
+        Contact::class => ContactPolicy::class,
     ];
 
     /**
@@ -23,6 +27,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('manage-users', function(User $user) {
+            return $user->is_admin = true;
+        });
     }
 }

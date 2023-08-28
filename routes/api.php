@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ContactsController;
 use App\Http\Controllers\Api\UserController;
+use \App\Http\Controllers\Api\AddressesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
@@ -32,4 +33,9 @@ Route::post('auth/register', RegisterController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('contacts', ContactsController::class);
+    Route::get('contacts/{contact}/addresses', [AddressesController::class, 'index']);
+    Route::get('contacts/{contact}/addresses/{address}', [AddressesController::class, 'show']);
+    Route::post('contacts/{contact}/addresses', [AddressesController::class, 'store']);
+    Route::put('contacts/{contact}/addresses/{address}', [AddressesController::class, 'update']);
+    Route::delete('contacts/{contact}/addresses/{address}', [AddressesController::class, 'destroy']);
 });
