@@ -33,9 +33,8 @@ Route::post('auth/register', RegisterController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('contacts', ContactsController::class);
-    Route::get('contacts/{contact}/addresses', [AddressesController::class, 'index']);
-    Route::get('contacts/{contact}/addresses/{address}', [AddressesController::class, 'show']);
-    Route::post('contacts/{contact}/addresses', [AddressesController::class, 'store']);
-    Route::put('contacts/{contact}/addresses/{address}', [AddressesController::class, 'update']);
-    Route::delete('contacts/{contact}/addresses/{address}', [AddressesController::class, 'destroy']);
+    
+    Route::prefix('contacts/{contact}')->group(function () {
+        Route::apiResource('addresses', AddressesController::class);
+    });
 });
