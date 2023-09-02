@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Policies\UserPolicy;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +26,7 @@ class UserController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $this->authorize('manage-users');
+        $this->authorize('viewAny', User::class);
 
         return UserResource::collection(User::with('contacts')->paginate($this->paginationPerPage));
     }
@@ -39,9 +40,9 @@ class UserController extends Controller
      */
     public function show(User $user): UserResource
     {
-        $this->authorize('manage-users');
+        $this->authorize('view', $user);
 
-        return new UserResource($user);
+        return new UserResource(User::with('contacts.addresses')->where('id', $user->id)->get()[0]);
     }
 
     /**
@@ -53,11 +54,12 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): UserResource
     {
-        $this->authorize('manage-users');
+        $this->authorize('create', User::class);
 
-        $user = User::create([ // TODO: refactor according to real needs
+        $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
+            'is_admin' => $request->has('is_admin') ? $request->get('is_admin') : false,
             'email_verified_at' => now(),
             'password' => Hash::make($request->get('password')),
             'remember_token' => Str::random(10),
@@ -76,7 +78,7 @@ class UserController extends Controller
      */
     public function update(User $user, UpdateUserRequest $request): UserResource
     {
-        $this->authorize('manage-users');
+        $this->authorize('update', $user);
 
         $user->update($request->all());
 
@@ -92,7 +94,7 @@ class UserController extends Controller
      */
     public function destroy(User $user): \Illuminate\Http\Response
     {
-        $this->authorize('manage-users');
+        $this->authorize('delete');
 
         $user->delete();
 

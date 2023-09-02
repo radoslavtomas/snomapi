@@ -9,6 +9,18 @@ use App\Models\Contact;
 class AddressPolicy
 {
     /**
+     * Perform pre-authorization checks.
+     */
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
+
+    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user, Contact $contact): bool
@@ -45,7 +57,7 @@ class AddressPolicy
      */
     public function delete(User $user, Address $address, Contact $contact)
     {
-        return $user->id === $contact->user_id && $contact->id == $address->contact_id;
+        return ($user->id === $contact->user_id && $contact->id == $address->contact_id);
     }
 
     /**

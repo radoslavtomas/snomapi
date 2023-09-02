@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +16,11 @@ class ContactsController extends Controller
     /**
      * Get all contacts for authenticated user
      *
-     * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index()
     {
-        $contacts = auth()->user()->contacts;
+
+        $contacts = auth()->user()->contacts->sortBy('last_name');
 
         return ContactResource::collection($contacts);
     }

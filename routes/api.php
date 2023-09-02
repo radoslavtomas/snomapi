@@ -32,6 +32,7 @@ Route::post('auth/register', RegisterController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
+    Route::get('users/{user}/addresses', [UserController::class, 'userAddresses']);
     Route::apiResource('contacts', ContactsController::class);
 
     Route::prefix('contacts/{contact}')->group(function () {

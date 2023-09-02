@@ -22,6 +22,7 @@ class ContactResource extends JsonResource
             'date_of_birth' => $this->date_of_birth,
             'phone' => $this->phone,
             'email' => $this->email,
+            'addresses' => AddressResource::collection($this->whenLoaded('addresses'))
         ];
     }
 }

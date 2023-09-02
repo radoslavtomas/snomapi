@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ContactPolicy
+class UserPolicy
 {
     /**
      * Perform pre-authorization checks.
@@ -23,47 +22,47 @@ class ContactPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user, Contact $contact): bool
+    public function viewAny(User $user): bool
     {
-        return $user->id === $contact->user_id;
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Contact $contact): bool
+    public function view(User $user, User $model): bool
     {
-        return $user->id === $contact->user_id;
+        return $user->id === $model->id;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Contact $contact): bool
+    public function create(User $user): bool
     {
-        return $user->id === $contact->user_id;
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Contact $contact): bool
+    public function update(User $user, User $model): bool
     {
-        return $user->id === $contact->user_id;
+        return $user->id === $model->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Contact $contact): bool
+    public function delete(User $user, User $model): bool
     {
-        return $user->id === $contact->user_id;
+        return $user->id === $model->id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Contact $contact): bool
+    public function restore(User $user, User $model): bool
     {
         //
     }
@@ -71,7 +70,7 @@ class ContactPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Contact $contact): bool
+    public function forceDelete(User $user, User $model): bool
     {
         //
     }
