@@ -15,7 +15,7 @@ class UserController extends Controller
     {
         // dd(User::paginate());
         return view('admin.users.index', [
-            'users' => User::paginate(2)
+            'users' => User::simplePaginate(10)
         ]);
     }
 
