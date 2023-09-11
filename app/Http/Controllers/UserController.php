@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 
 class UserController extends Controller
 {
@@ -13,7 +17,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        // dd(User::paginate());
         return view('admin.users.index', [
             'users' => User::simplePaginate(10)
         ]);
@@ -38,10 +41,18 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, User $user)
     {
-        //
+        $sessions = $this->sessions($request, $user)->all();
+        // dd($sessions);
+
+        return view('admin.users.show', [
+            'user' => $user,
+            'sessions' => $sessions
+        ]);
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -56,7 +67,7 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        dd($request->all());
     }
 
     /**
@@ -65,5 +76,52 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Get the current sessions.
+     *
+     * @param Request $request
+     * @param User $user
+     * @return Collection
+     */
+    public function sessions(Request $request, User $user): Collection
+    {
+        if (config('session.driver') !== 'database') {
+            return collect();
+        }
+
+        return collect(
+            DB::connection(config('session.connection'))->table(config('session.table', 'sessions'))
+                ->where('user_id', $user->id)
+                ->orderBy('last_activity', 'desc')
+                ->get()
+        )->map(function ($session) use ($request) {
+            $agent = $this->createAgent($session);
+
+            return (object) [
+                'agent' => [
+                    'is_desktop' => $agent->isDesktop(),
+                    'platform' => $agent->platform(),
+                    'browser' => $agent->browser(),
+                ],
+                'ip_address' => $session->ip_address,
+                'is_current_device' => $session->id === $request->session()->getId(),
+                'last_active' => Carbon::createFromTimestamp($session->last_activity)->diffForHumans(),
+            ];
+        });
+    }
+
+    /**
+     * Create a new agent instance from the given session.
+     *
+     * @param  mixed  $session
+     * @return Agent
+     */
+    protected function createAgent(mixed $session): Agent
+    {
+        return tap(new Agent, function ($agent) use ($session) {
+            $agent->setUserAgent($session->user_agent);
+        });
     }
 }
