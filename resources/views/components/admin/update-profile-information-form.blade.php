@@ -1,4 +1,4 @@
-<x-admin.form-section submit="{{ route('admin.users.update', $user->id) }}">
+<x-admin.form-section submit="{{ route('admin.users.update', $user->id) }}" method="PUT">
     <x-slot name="title">
         {{ __('Profile Information') }}
     </x-slot>
@@ -29,9 +29,11 @@
         </x-button>
     </x-slot>
 
+    @if (session('status.profile'))
     <x-slot name="messages">
         <x-admin.action-message class="bg-green-900">
-            Saved
+            {{ session('status.profile') }}
         </x-admin.action-message>
     </x-slot>
+    @endif
 </x-admin.form-section>

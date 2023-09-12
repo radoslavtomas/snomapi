@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Jenssegers\Agent\Agent;
 
 class UserController extends Controller
@@ -65,9 +68,23 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        dd($request->all());
+        $user->update($request->all());
+
+        return back()->with('status.profile', 'Profile successfully updated.');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updatePassword(UpdatePasswordRequest $request, User $user)
+    {
+        $user->update([
+            'password' => Hash::make($request->get('password'))
+        ]);
+
+        return back()->with('status.password', 'Profile successfully updated.');
     }
 
     /**

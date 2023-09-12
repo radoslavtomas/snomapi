@@ -55,7 +55,7 @@
                 @endforeach
             </div>
         @else
-            <div class="mt-4 p-2 text-sm text-gray-300 border border-gray-600 rounded">No sessions yet...</div>
+            <div class="mt-4 p-2 text-sm text-gray-300 border border-gray-600 rounded">No sessions...</div>
         @endif
 
         <div class="flex items-center mt-5">

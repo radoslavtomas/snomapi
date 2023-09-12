@@ -9,7 +9,7 @@
             {{ $content }}
         </div>
 
-        @if(isset($messages))
+        @if (isset($messages))
             <div class="mt-2">
                 {{ $messages }}
             </div>

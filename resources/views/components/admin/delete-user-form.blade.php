@@ -13,7 +13,7 @@
         </div>
 
         <div class="mt-5">
-            <x-danger-button>
+            <x-danger-button onclick="alert('ajajaj')">
                 {{ __('Delete Account') }}
             </x-danger-button>
         </div>
