@@ -6,9 +6,11 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Jenssegers\Agent\Agent;
@@ -78,7 +80,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updatePassword(UpdatePasswordRequest $request, User $user)
+    public function updatePassword(UpdatePasswordRequest $request, User $user): RedirectResponse
     {
         $user->update([
             'password' => Hash::make($request->get('password'))
@@ -90,9 +92,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('status.user_delete', 'User was successfully deleted');
     }
 
     /**
@@ -117,6 +121,7 @@ class UserController extends Controller
             $agent = $this->createAgent($session);
 
             return (object) [
+                'id' => $session->id,
                 'agent' => [
                     'is_desktop' => $agent->isDesktop(),
                     'platform' => $agent->platform(),
@@ -140,5 +145,43 @@ class UserController extends Controller
         return tap(new Agent, function ($agent) use ($session) {
             $agent->setUserAgent($session->user_agent);
         });
+    }
+
+    /**
+     * Log out from other browser sessions.
+     *
+     */
+    public function logoutOtherBrowserSessions(Request $request, User $user): RedirectResponse
+    {
+        $validated = $request->validate([
+            'current_session' => 'required|string',
+        ]);
+
+        if (config('session.driver') !== 'database') {
+            return back()->with('status.sessions', 'Unable to delete other browser sessions - session driver is not database');
+        }
+
+        $this->deleteOtherSessionRecords($user->id, $validated['current_session']);
+
+        return back()->with('status.sessions', 'Other browser sessions successfully deleted.');
+    }
+
+    /**
+     * Delete the other browser session records from storage.
+     *
+     * @param $userId
+     * @param $sessionId
+     * @return void
+     */
+    protected function deleteOtherSessionRecords($userId, $sessionId): void
+    {
+        if (config('session.driver') !== 'database') {
+            return;
+        }
+
+        DB::connection(config('session.connection'))->table(config('session.table', 'sessions'))
+            ->where('user_id', $userId)
+            ->where('id', '!=', $sessionId)
+            ->delete();
     }
 }

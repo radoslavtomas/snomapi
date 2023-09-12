@@ -7,6 +7,12 @@
 
     <div class="container mx-auto">
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 text-white">
+            @if (session('status.user_delete'))
+                <x-admin.action-message class="bg-green-900">
+                    {{ session('status.user_delete') }}
+                </x-admin.action-message>
+            @endif
+
             @foreach($users as $user)
                 <h1>{{$user->name}} - {{ $user->email }}</h1>
             @endforeach

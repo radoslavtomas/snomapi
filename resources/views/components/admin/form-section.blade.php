@@ -1,4 +1,4 @@
-@props(['submit', 'method'])
+@props(['submit', 'method', 'id'])
 
 <div {{ $attributes->merge(['class' => 'md:grid md:grid-cols-3 md:gap-6']) }}>
     <x-section-title>
@@ -7,7 +7,7 @@
     </x-section-title>
 
     <div class="mt-5 md:mt-0 md:col-span-2">
-        <form method="POST" action="{{ $submit }}">
+        <form method="POST" action="{{ $submit }}" @if(isset($id)) id="{{ $id }}" @endif>
             @csrf
             @method($method ?? 'POST')
 

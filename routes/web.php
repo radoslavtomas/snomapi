@@ -32,6 +32,7 @@ Route::middleware([
         Route::get('users/{user}', [UserController::class, 'show'])->name('admin.users.show');
         Route::match(['put', 'patch'], 'users/{user}', [UserController::class, 'update'])->name('admin.users.update');
         Route::match(['put', 'patch'], 'users/{user}/password', [UserController::class, 'updatePassword'])->name('admin.users.update_password');
-//        Route::post('users/{user}', [UserController::class, 'store'])->name('admin.users.index');
+        Route::delete('users/{user}/sessions', [UserController::class, 'logoutOtherBrowserSessions'])->name('admin.users.logout_sessions');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     });
 });
