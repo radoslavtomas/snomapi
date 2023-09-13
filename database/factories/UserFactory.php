@@ -49,7 +49,7 @@ class UserFactory extends Factory
     /**
      * Indicate that the user should be an admin.
      */
-    public function is_admin(): static
+    public function isAdmin(): static
     {
         return $this->state(function (array $attributes) {
             return [

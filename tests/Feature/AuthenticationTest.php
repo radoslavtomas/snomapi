@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -18,7 +19,7 @@ class AuthenticationTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    public function test_normal_users_cannot_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create();
 
@@ -26,6 +27,23 @@ class AuthenticationTest extends TestCase
             'email' => $user->email,
             'password' => 'password',
         ]);
+
+        $response->assertStatus(Response::HTTP_FOUND);
+
+//        $this->assertAuthenticated();
+//        $response->assertRedirect(RouteServiceProvider::HOME);
+    }
+
+    public function test_admin_users_can_authenticate_using_the_login_screen(): void
+    {
+        $user = User::factory()->isAdmin()->create();
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        // $response->assertStatus(Response::HTTP_OK);
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);

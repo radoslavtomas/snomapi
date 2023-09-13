@@ -22,8 +22,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        //dd(User::all());
         return view('admin.users.index', [
-            'users' => User::simplePaginate(10)
+            'users' => User::simplePaginate(15)
         ]);
     }
 
@@ -72,7 +73,18 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update($request->all());
+        // dd($request->all());
+        $data = [
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'is_admin' => false
+        ];
+
+        if ($request->has('is_admin')) {
+            $data['is_admin'] = $request->get('is_admin') === 'on';
+        }
+
+        $user->update($data);
 
         return back()->with('status.profile', 'Profile successfully updated.');
     }
