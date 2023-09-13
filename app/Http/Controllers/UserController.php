@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -13,6 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 
 class UserController extends Controller
@@ -33,15 +35,30 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.users.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $data = [
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'is_admin' => false,
+            'email_verified_at' => now(),
+            'password' => Hash::make($request->get('password')),
+            'remember_token' => Str::random(10),
+        ];
+
+        if ($request->has('is_admin')) {
+            $data['is_admin'] = $request->get('is_admin') === 'on';
+        }
+
+        User::create($data);
+
+        return redirect()->route('admin.users.index')->with('status.index', 'User for ' . $request->get('name') . ' was successfully created');
     }
 
     /**
@@ -108,7 +125,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('status.user_delete', 'User was successfully deleted');
+        return redirect()->route('admin.users.index')->with('status.index', 'User was successfully deleted');
     }
 
     /**

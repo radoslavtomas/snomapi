@@ -29,6 +29,8 @@ Route::middleware([
 
     Route::prefix('admin')->group(function () {
         Route::get('users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::get('users/create', [UserController::class, 'create'])->name('admin.users.create');
+        Route::post('users/create', [UserController::class, 'store'])->name('admin.users.store');
         Route::get('users/{user}', [UserController::class, 'show'])->name('admin.users.show');
         Route::match(['put', 'patch'], 'users/{user}', [UserController::class, 'update'])->name('admin.users.update');
         Route::match(['put', 'patch'], 'users/{user}/password', [UserController::class, 'updatePassword'])->name('admin.users.update_password');
