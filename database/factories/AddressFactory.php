@@ -20,7 +20,7 @@ class AddressFactory extends Factory
         return [
             'contact_id' => Contact::factory(),
             'address_line_1' => fake()->streetAddress(),
-            'address_line_4' => fake()->city(),
+            'city' => fake()->city(),
             'postcode' => fake()->postcode(),
             'country' => fake()->country()
         ];

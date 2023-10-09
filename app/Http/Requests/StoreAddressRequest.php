@@ -25,7 +25,7 @@ class StoreAddressRequest extends FormRequest
             'address_line_1' => 'required|string',
             'address_line_2' => 'sometimes|nullable|string',
             'address_line_3' => 'sometimes|nullable|string',
-            'address_line_4' => 'required|string',
+            'city' => 'required|string',
             'postcode' => 'required|string',
             'country' => 'required|string',
         ];

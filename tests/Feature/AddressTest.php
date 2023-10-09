@@ -38,7 +38,7 @@ class AddressTest extends TestCase
 
         $response = $this->actingAs($user)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses' , [
             'address_line_1' => fake()->streetAddress(),
-            'address_line_4' => fake()->city(),
+            'city' => fake()->city(),
             'postcode' => fake()->postcode(),
             'country' => fake()->country(),
         ]);
@@ -90,7 +90,7 @@ class AddressTest extends TestCase
         $response = $this->actingAs($user2)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses/' . $address->id, [
             '_method' => 'PUT',
             'address_line_1' => 'Changed street 123',
-            'address_line_4' => 'Invisible city',
+            'city' => 'Invisible city',
             'postcode' => '123 45',
             'country' => 'Atlantis',
         ]);
@@ -116,7 +116,7 @@ class AddressTest extends TestCase
         $response = $this->actingAs($user)->postJson('/api/' . $this->apiVersion . '/contacts/' . $contact->id . '/addresses/' . $address->id, [
             '_method' => 'PUT',
             'address_line_1' => 'Changed street 123',
-            'address_line_4' => 'Invisible city',
+            'city' => 'Invisible city',
             'postcode' => '123 45',
             'country' => 'Atlantis',
         ]);
