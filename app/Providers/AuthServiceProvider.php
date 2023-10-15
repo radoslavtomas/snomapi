@@ -2,13 +2,15 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Models\Address;
 use App\Models\Contact;
 use App\Models\User;
 use App\Policies\AddressPolicy;
 use App\Policies\ContactPolicy;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Request;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         Gate::define('manage-users', function(User $user) {
             return $user->is_admin = true;
+        });
+
+        ResetPassword::createUrlUsing(function (User $user, string $token) {
+            return Request::root() . '/reset-password/' . $token . '?email=' . $user->email;
         });
     }
 }
