@@ -38,8 +38,8 @@ Route::middleware('guest')->group(function() {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user/addresses', [UserController::class, 'getUserAddresses']);
     Route::apiResource('users', UserController::class);
-    Route::get('users/{user}/addresses', [UserController::class, 'userAddresses']);
     Route::apiResource('contacts', ContactsController::class);
 
     Route::prefix('contacts/{contact}')->group(function () {

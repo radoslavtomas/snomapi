@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Policies\UserPolicy;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,19 @@ class UserController extends Controller
     {
         $this->authorize('view', $user);
 
-        return new UserResource(User::with('contacts.addresses')->where('id', $user->id)->get()[0]);
+        return new UserResource(User::with('contacts.addresses')
+            ->where('id', $user->id)->get()[0]);
+    }
+
+    /**
+     * Get authenticated user and their addresses
+     *
+     * @return UserResource
+     */
+    public function getUserAddresses(): UserResource
+    {
+        return new UserResource(User::with('contacts.addresses')
+            ->where('id', auth()->id())->get()[0]);
     }
 
     /**
