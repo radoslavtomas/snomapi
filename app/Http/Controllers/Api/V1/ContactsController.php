@@ -47,7 +47,15 @@ class ContactsController extends Controller
      */
     public function store(StoreContactRequest $request): ContactResource
     {
-        $contact = auth()->user()->contacts()->create($request->all());
+        $data = $request->validated();
+
+        $contact = auth()->user()->contacts()->create([
+            'first_names' => $data['first_names'],
+            'last_name' => $data['last_name'],
+            'date_of_birth' => $data['date_of_birth'] ?? '',
+            'email' => $data['email'] ?? '',
+            'phone' => $data['phone'] ?? '',
+        ]);
 
         return new ContactResource($contact);
     }
@@ -64,7 +72,15 @@ class ContactsController extends Controller
     {
         $this->authorize('update', $contact);
 
-        $contact->update($request->all());
+        $data = $request->validated();
+
+        $contact->update([
+            'first_names' => $data['first_names'],
+            'last_name' => $data['last_name'],
+            'date_of_birth' => $data['date_of_birth'] ?? '',
+            'email' => $data['email'] ?? '',
+            'phone' => $data['phone'] ?? '',
+        ]);
 
         return new ContactResource($contact);
     }

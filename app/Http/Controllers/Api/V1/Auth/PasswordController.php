@@ -14,14 +14,17 @@ class PasswordController extends Controller
 {
     public function postForgotPassword(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate([
+            'email' => 'required|email',
+            'reset_url' => 'required|url'
+        ]);
 
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
         return [
-            'status' => $status === Password::RESET_LINK_SENT,
+            'success' => $status === Password::RESET_LINK_SENT,
             'message' => __($status)
         ];
     }

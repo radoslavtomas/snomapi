@@ -34,6 +34,10 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         ResetPassword::createUrlUsing(function (User $user, string $token) {
+            if(Request::has('reset_url')) {
+                return Request::get('reset_url') . '/reset-password/' . $token . '?email=' . $user->email;
+            }
+
             return Request::root() . '/reset-password/' . $token . '?email=' . $user->email;
         });
     }
