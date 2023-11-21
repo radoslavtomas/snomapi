@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdatePasswordAsAdminRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -115,7 +116,7 @@ class UserController extends Controller
             'password' => Hash::make($request->get('password'))
         ]);
 
-        return back()->with('status.password', 'Profile successfully updated.');
+        return back()->with('status.password', 'Password successfully updated.');
     }
 
     /**

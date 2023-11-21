@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdatePasswordAsAdminRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -12,6 +14,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -58,6 +61,17 @@ class UserController extends Controller
             ->where('id', auth()->id())->get()[0]);
     }
 
+    public function putUpdatePassword(UpdatePasswordRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->update([
+            'password' => Hash::make($request->get('password'))
+        ]);
+
+        return $user;
+    }
+
     /**
      * Create new user
      *
@@ -93,7 +107,7 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        $user->update($request->all());
+        $user->update($request->validated());
 
         return new UserResource($user);
     }

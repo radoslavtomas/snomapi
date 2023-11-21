@@ -31,14 +31,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('guest')->group(function() {
     Route::post('auth/register', RegisterController::class);
-    Route::post('/forgot-password', [PasswordController::class, 'postForgotPassword'])
-        ->name('api.password.email');
-    Route::post('/reset-password', [PasswordController::class, 'postResetPassword'])
-        ->name('api.password.update');
+    Route::post('forgot-password', [PasswordController::class, 'postForgotPassword']);
+    Route::post('reset-password', [PasswordController::class, 'postResetPassword']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user/addresses', [UserController::class, 'getUserAddresses']);
+    Route::put('user/update-password', [UserController::class, 'putUpdatePassword']);
+
     Route::apiResource('users', UserController::class);
     Route::apiResource('contacts', ContactsController::class);
 

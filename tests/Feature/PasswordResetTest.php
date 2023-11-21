@@ -55,6 +55,7 @@ class PasswordResetTest extends TestCase
 
         $response = $this->post('/api/' . $this->apiVersion . '/forgot-password', [
             'email' => $user->email,
+            'reset_url' => 'http://localhost'
         ]);
 
         Notification::assertSentTo($user, ResetPassword::class);
@@ -115,7 +116,7 @@ class PasswordResetTest extends TestCase
         });
     }
 
-    public function test_password_can_be_resetvia_api_with_valid_token(): void
+    public function test_password_can_be_reset_via_api_with_valid_token(): void
     {
         Notification::fake();
 
@@ -123,6 +124,7 @@ class PasswordResetTest extends TestCase
 
         $response = $this->post('/api/' . $this->apiVersion . '/forgot-password', [
             'email' => $user->email,
+            'reset_url' => 'http://localhost'
         ]);
 
         Notification::assertSentTo($user, ResetPassword::class, function (object $notification) use ($user) {
