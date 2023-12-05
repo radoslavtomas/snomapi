@@ -15,7 +15,7 @@
             @endif
 
             <div class="max-w-7xl mx-auto p-6 lg:p-8">
-                <div class="flex justify-center w-40 h-auto mb-8">
+                <div class="w-40 h-auto mb-8 mx-auto">
                     <img src="/img/snom.png" alt="snomapi">
                 </div>
 
