@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Route::delete('users/{user}', [UserController::class, 'destroy']);
 
 Route::middleware('guest')->group(function() {
-    Route::post('auth/register', RegisterController::class);
+    Route::post('register', RegisterController::class);
     Route::post('forgot-password', [PasswordController::class, 'postForgotPassword']);
     Route::post('reset-password', [PasswordController::class, 'postResetPassword']);
 });

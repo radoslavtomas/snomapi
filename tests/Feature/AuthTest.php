@@ -23,7 +23,7 @@ class AuthTest extends TestCase
     {
         $user = User::factory()->create()->toArray();
 
-        $response = $this->postJson('/api/' . $this->apiVersion . '/auth/register', $user);
+        $response = $this->postJson('/api/' . $this->apiVersion . '/register', $user);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonStructure([
             'errors' => [
@@ -39,7 +39,7 @@ class AuthTest extends TestCase
      */
     public function test_registration_fails_with_insecure_password(): void
     {
-        $response = $this->postJson('/api/' . $this->apiVersion . '/auth/register', [
+        $response = $this->postJson('/api/' . $this->apiVersion . '/register', [
             'name' => 'Valid name',
             'email' => 'valid@email.com',
             'password' => 'password',
@@ -59,7 +59,7 @@ class AuthTest extends TestCase
      */
     public function test_registration_succeeds_with_valid_data(): void
     {
-        $response = $this->postJson('/api/' . $this->apiVersion . '/auth/register', [
+        $response = $this->postJson('/api/' . $this->apiVersion . '/register', [
             'name' => 'Valid name',
             'email' => 'valid@email.com',
             'password' => 'Password123',
